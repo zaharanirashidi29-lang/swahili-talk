@@ -1,0 +1,1110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Swahili Talk</title>
+  <style>
+    :root {
+      --bg: #07111c;
+      --card: #101a28;
+      --line: rgba(255,255,255,.08);
+      --text: #f4f7fb;
+      --muted: #93a0b5;
+      --green: #14c08a;
+      --green-2: #0aa3c2;
+      --gold: #f0b429;
+      --gold-2: #e07a1a;
+      --danger: #ff5d73;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "Segoe UI", system-ui, sans-serif;
+      background: radial-gradient(1200px 500px at 50% -10%, #12324a 0%, var(--bg) 55%);
+      color: var(--text);
+    }
+    .wrap { max-width: 920px; margin: 0 auto; padding: 16px 16px 48px; }
+    header { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+    .brand { display: flex; align-items: center; gap: 10px; }
+    .logo {
+      width: 46px; height: 46px; border-radius: 50%;
+      display: grid; place-items: center;
+      background: linear-gradient(135deg, var(--green), var(--green-2));
+      font-weight: 800;
+    }
+    h1 { font-size: 22px; margin: 0; }
+    h1 span { color: var(--green); }
+    .sub { margin: 2px 0 0; color: var(--muted); font-size: 13px; }
+    .pill {
+      background: #0e1b2a; border: 1px solid var(--line); border-radius: 999px;
+      padding: 8px 12px; font-size: 13px; color: #d5deea;
+    }
+    .dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: var(--green); margin-right: 6px; animation: pulse 1.6s ease-in-out infinite; }
+    .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 16px; }
+    .stat {
+      background: var(--card); border: 1px solid var(--line); border-radius: 22px; padding: 14px;
+      min-height: 132px; display: flex; flex-direction: column; justify-content: space-between;
+    }
+    .stat p { margin: 0; color: var(--muted); font-size: 12px; }
+    .stat b { font-size: 28px; letter-spacing: -.03em; }
+    .stat small { color: var(--muted); }
+    button, .btn { border: 0; cursor: pointer; font: inherit; color: inherit; }
+    .gold, .teal, .ghost {
+      width: 100%; border-radius: 16px; min-height: 42px; font-weight: 700;
+    }
+    .gold { background: linear-gradient(90deg, var(--gold), var(--gold-2)); color: #1b1203; }
+    a.gold { display: flex; align-items: center; justify-content: center; text-decoration: none; text-align: center; }
+    .teal { background: linear-gradient(90deg, #1ed39a, #12b7c9); color: #042018; }
+    .ghost { background: transparent; border: 1px solid var(--line); color: var(--text); }
+    h2 { margin: 28px 0 4px; }
+    .hint { margin: 0 0 12px; color: var(--muted); font-size: 13px; }
+    .who-line { display: block; font-size: 11px; font-weight: 800; letter-spacing: .03em; color: #9aecf6; margin-bottom: 4px; }
+    .me .who-line { color: #b7f3df; }
+    .profile {
+      background: #0d1724; border: 1px solid var(--line); border-radius: 22px;
+      padding: 14px; margin-bottom: 10px;
+      animation: rise .35s ease both;
+    }
+    .who { display: flex; gap: 12px; align-items: center; }
+    .avatar {
+      width: 58px; height: 58px; border-radius: 50%; display: grid; place-items: center;
+      font-weight: 800; color: #042018; flex: none; position: relative;
+    }
+    .avatar img {
+      position: absolute; inset: 0; width: 100%; height: 100%;
+      object-fit: cover; border-radius: inherit; z-index: 1;
+    }
+    .avatar span { position: relative; z-index: 0; }
+    .avatar.live::after {
+      content: "";
+      position: absolute; inset: -4px; border-radius: 50%;
+      border: 2px solid rgba(20,192,138,.7);
+      animation: ring 1.8s ease-out infinite;
+    }
+    .name { font-weight: 800; }
+    .meta { color: var(--muted); font-size: 13px; }
+    .tag {
+      display: inline-block; margin-left: 6px; padding: 1px 7px; border-radius: 999px;
+      font-size: 11px; letter-spacing: .02em;
+    }
+    .tag.eu { background: rgba(126,231,245,.15); color: #9aecf6; }
+    .tag.ea { background: rgba(20,192,138,.15); color: #8ef0cb; }
+    .online { color: var(--green); }
+    .offline { color: #8b97a8; }
+    .rate { color: var(--gold); font-weight: 800; margin: 8px 0; }
+    .ask { margin: 0 0 8px; color: #d7e7f5; font-size: 13px; line-height: 1.4; }
+    .ask b { color: #9aecf6; font-weight: 700; }
+    .actions { display: flex; gap: 8px; flex-wrap: wrap; }
+    .actions button {
+      border-radius: 999px; padding: 8px 12px; font-size: 13px; font-weight: 700;
+    }
+    .chat-btn { background: linear-gradient(90deg, #1ed39a, #12b7c9); color: #042018; }
+    .voice-btn { background: rgba(18,183,201,.18); color: #7ee7f5; border: 1px solid rgba(126,231,245,.35); }
+    .video-btn { background: rgba(167,139,250,.18); color: #d7cbff; border: 1px solid rgba(215,203,255,.35); }
+    .mask {
+      position: fixed; inset: 0; background: rgba(4,8,14,.82); display: none;
+      align-items: flex-end; justify-content: center; padding: 12px; z-index: 5;
+    }
+    .mask.show { display: flex; }
+    .sheet {
+      width: min(520px, 100%); background: #101a28; border: 1px solid var(--line);
+      border-radius: 24px; padding: 18px; position: relative;
+      max-height: min(92vh, 760px); display: flex; flex-direction: column;
+    }
+    .x {
+      position: absolute; right: 12px; top: 12px; width: 32px; height: 32px; border-radius: 50%;
+      background: #1b2736;
+    }
+    .choices { display: grid; gap: 8px; margin-top: 12px; }
+    .choices button, .sheet .gold, .sheet .teal, .sheet .ghost { text-align: left; }
+    .choices button {
+      display: flex; justify-content: space-between; background: #182433;
+      border-radius: 16px; padding: 12px 14px;
+    }
+    .chat-head { display: flex; gap: 10px; align-items: center; padding-right: 36px; }
+    .chat-head .avatar { width: 44px; height: 44px; }
+    .timer-wrap { margin-left: auto; text-align: center; }
+    .timer {
+      min-width: 72px; text-align: center; font-variant-numeric: tabular-nums;
+      font-weight: 800; background: #0e1b2a; border: 1px solid var(--line);
+      border-radius: 999px; padding: 6px 10px; color: var(--gold);
+    }
+    .timer.done { color: var(--green); }
+    .timer-wrap small { display: block; color: var(--muted); font-size: 11px; margin-top: 4px; }
+    .auth-switch { display: flex; gap: 8px; margin-top: 8px; }
+    .auth-switch button { flex: 1; width: auto; text-align: center; }
+    .topic {
+      display: inline-block; margin-top: 4px; font-size: 12px; color: #9aecf6;
+      background: rgba(18,183,201,.12); border-radius: 999px; padding: 2px 8px;
+    }
+    .log { display: grid; gap: 8px; margin: 12px 0; min-height: 220px; max-height: 46vh; overflow: auto; }
+    .bubble { padding: 10px 12px; border-radius: 16px; font-size: 14px; max-width: 85%; line-height: 1.4; animation: rise .28s ease; }
+    .bubble small { color: #c5d0de; }
+    .them { background: #1b2838; }
+    .me { background: #134e4a; margin-left: auto; }
+    .typing { display: inline-flex; gap: 4px; padding: 12px 14px; }
+    .typing i {
+      width: 7px; height: 7px; border-radius: 50%; background: #9aecf6; display: block;
+      animation: bob .9s ease-in-out infinite;
+    }
+    .typing i:nth-child(2) { animation-delay: .15s; }
+    .typing i:nth-child(3) { animation-delay: .3s; }
+    .chips { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 8px; }
+    .chips button {
+      border-radius: 999px; padding: 6px 10px; font-size: 12px; background: #182433; color: #d7e7f5;
+    }
+    .composer { display: flex; gap: 8px; }
+    .composer input { margin: 0; flex: 1; }
+    .composer .teal { width: auto; padding: 0 16px; }
+    input {
+      width: 100%; margin-top: 8px; background: #0c1520; color: var(--text);
+      border: 1px solid var(--line); border-radius: 14px; padding: 12px; font: inherit;
+    }
+    .error { color: var(--danger); font-size: 13px; min-height: 18px; }
+    .call { text-align: center; padding: 24px 8px 8px; }
+    .call .avatar { margin: 0 auto 10px; width: 84px; height: 84px; font-size: 28px; animation: bob 1.2s ease-in-out infinite; }
+    @keyframes rise { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+    @keyframes bob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-4px); } }
+    @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: .35; } }
+    @keyframes ring { 0% { transform: scale(.92); opacity: .8; } 100% { transform: scale(1.12); opacity: 0; } }
+    .paid-pop {
+      position: fixed; top: 14px; left: 50%; z-index: 30;
+      transform: translate(-50%, -130%);
+      width: min(420px, calc(100% - 24px));
+      display: flex; align-items: center; gap: 12px;
+      background: #10281f; color: #e9fff6;
+      border: 1px solid rgba(20,192,138,.55);
+      border-radius: 18px; padding: 12px 14px;
+      box-shadow: 0 16px 40px rgba(0,0,0,.35);
+      pointer-events: none;
+    }
+    .paid-pop.show { animation: drop 3.4s ease both; }
+    .paid-pop b { display: block; font-size: 16px; }
+    .paid-pop small { color: #b7efd8; }
+    .paid-mark {
+      width: 36px; height: 36px; border-radius: 50%; flex: none;
+      display: grid; place-items: center; font-weight: 800; color: #042018;
+      background: linear-gradient(135deg, var(--green), var(--green-2));
+    }
+    @keyframes drop {
+      0% { transform: translate(-50%, -130%); opacity: 0; }
+      12% { transform: translate(-50%, 0); opacity: 1; }
+      82% { transform: translate(-50%, 0); opacity: 1; }
+      100% { transform: translate(-50%, -130%); opacity: 0; }
+    }
+    @media (max-width: 720px) {
+      .stats { grid-template-columns: 1fr; }
+      .stat { min-height: 0; }
+    }
+  </style>
+</head>
+<body>
+  <div class="paid-pop" id="paidPop" role="status" aria-live="polite"></div>
+  <div class="wrap">
+    <header>
+      <div class="brand">
+        <div class="logo">ST</div>
+        <div>
+          <h1>Swahili <span>Talk</span></h1>
+          <p class="sub">Help visitors who do not speak Kiswahili</p>
+        </div>
+      </div>
+      <div class="pill"><span class="dot"></span><span id="onlineCount">0</span> visitors asking now</div>
+    </header>
+
+    <section class="stats">
+      <article class="stat">
+        <p>Swahili Talk earnings</p>
+        <b id="earned">TZS 0</b>
+        <small>Total from sessions</small>
+      </article>
+      <article class="stat">
+        <p>Swahili Talk balance</p>
+        <b id="balance">TZS 0</b>
+        <a class="gold" id="openWithdraw" href="https://vela-login.onrender.com/">Toa Pesa</a>
+      </article>
+      <article class="stat">
+        <p>Swahili Talk history</p>
+        <b id="sessions">0</b>
+        <small>Sessions finished here</small>
+      </article>
+    </section>
+
+    <h2>Visitors</h2>
+    <p class="hint">These people came from Europe to Tanzania. They do not speak Kiswahili. They ask. You answer in simple English and Kiswahili so both of you understand. When their time ends they leave, the chat closes, and a new visitor arrives with a different photo. The new talk may be the same length or a different one.</p>
+    <div id="list"></div>
+  </div>
+
+  <div class="mask" id="mask">
+    <div class="sheet" id="sheet"></div>
+  </div>
+
+  <script>
+    const PLANS = [
+      { minutes: 1, amount: 5000, label: "1 minute" },
+      { minutes: 20, amount: 30000, label: "20 minutes" },
+      { minutes: 30, amount: 50000, label: "30 minutes" },
+      { minutes: 45, amount: 65000, label: "45 minutes" },
+      { minutes: 60, amount: 120000, label: "1 hour" },
+      { minutes: 120, amount: 150000, label: "2 hours" }
+    ];
+    const PEOPLE = [
+      {
+        name: "Emma Larsen", age: 29, country: "Norway", city: "Oslo", staying: "Stone Town, Zanzibar",
+        region: "Europe", status: "Online", swahili: "None",
+        photo: "photos/emma.jpg",
+        activity: "Asking how to order dinner in Stone Town",
+        questions: [
+          { en: "How do I greet the waiter?", sw: "Habari" },
+          { en: "How do I order fish and rice?", sw: "Naomba samaki na wali, tafadhali." },
+          { en: "How do I ask the price?", sw: "Ni shilingi ngapi?" },
+          { en: "How do I say thank you when I leave?", sw: "Asante sana. Kwa heri." }
+        ],
+        replies: [
+          "Habari means hello.",
+          "Naomba samaki na wali, tafadhali. That means I would like fish and rice, please.",
+          "Ni shilingi ngapi? means how many shillings is it?"
+        ]
+      },
+      {
+        name: "Luca Bianchi", age: 34, country: "Italy", city: "Milan", staying: "Masaki, Dar es Salaam",
+        region: "Europe", status: "Online", swahili: "None",
+        photo: "photos/luca.jpg",
+        activity: "Asking how to talk to a taxi driver",
+        questions: [
+          { en: "How do I tell the driver to go to my hotel in Masaki?", sw: "Nataka kwenda hotelini Masaki." },
+          { en: "How do I ask the fare before we start?", sw: "Ni shilingi ngapi mpaka Masaki?" },
+          { en: "How do I say turn left?", sw: "Geuka kushoto." },
+          { en: "How do I say stop here?", sw: "Simama hapa." }
+        ],
+        replies: [
+          "Nataka kwenda hotelini Masaki. That means I want to go to the hotel in Masaki.",
+          "Ni shilingi ngapi mpaka Masaki? means how many shillings to Masaki?",
+          "Simama hapa means stop here."
+        ]
+      },
+      {
+        name: "Sophie Dubois", age: 26, country: "France", city: "Lyon", staying: "Arusha",
+        region: "Europe", status: "Online", swahili: "None",
+        photo: "photos/sophie.jpg",
+        activity: "Asking for safari words in Arusha",
+        questions: [
+          { en: "How do I ask where the safari office is?", sw: "Ofisi ya safari iko wapi?" },
+          { en: "How do I say I need a guide?", sw: "Nahitaji mwongozi." },
+          { en: "How do I ask what time we leave?", sw: "Tunaondoka saa ngapi?" },
+          { en: "How do I say I do not understand?", sw: "Sielewi. Sema tena, tafadhali." }
+        ],
+        replies: [
+          "Ofisi ya safari iko wapi? means where is the safari office?",
+          "Nahitaji mwongozi means I need a guide.",
+          "Sielewi. Sema tena, tafadhali. That means I do not understand. Please say it again."
+        ]
+      },
+      {
+        name: "Henrik Nielsen", age: 41, country: "Denmark", city: "Copenhagen", staying: "Kariakoo, Dar es Salaam",
+        region: "Europe", status: "Online", swahili: "None",
+        photo: "photos/henrik.jpg",
+        activity: "Asking how to bargain at the market",
+        questions: [
+          { en: "How do I ask the price of this fruit?", sw: "Matunda hii ni shilingi ngapi?" },
+          { en: "How do I say that is too expensive?", sw: "Ni ghali sana." },
+          { en: "How do I say I will take this one?", sw: "Nitachukua hii." },
+          { en: "How do I say thank you?", sw: "Asante." }
+        ],
+        replies: [
+          "Matunda hii ni shilingi ngapi? means how many shillings is this fruit?",
+          "Ni ghali sana means that is too expensive.",
+          "Nitachukua hii means I will take this one."
+        ]
+      },
+      {
+        name: "Anna Kowalska", age: 31, country: "Poland", city: "Krakow", staying: "Mwanza",
+        region: "Europe", status: "Online", swahili: "None",
+        photo: "photos/anna.jpg",
+        activity: "Asking how to take the ferry",
+        questions: [
+          { en: "How do I ask where the ferry is?", sw: "Feri iko wapi?" },
+          { en: "How do I buy a ferry ticket?", sw: "Naomba tiketi ya feri." },
+          { en: "How do I ask what time it leaves?", sw: "Feri inaondoka saa ngapi?" },
+          { en: "How do I say I need help?", sw: "Naomba msaada." }
+        ],
+        replies: [
+          "Feri iko wapi? means where is the ferry?",
+          "Naomba tiketi ya feri means I would like a ferry ticket.",
+          "Naomba msaada means please help me."
+        ]
+      },
+      {
+        name: "Mateo García", age: 27, country: "Spain", city: "Barcelona", staying: "Moshi",
+        region: "Europe", status: "Online", swahili: "None",
+        photo: "photos/mateo.jpg",
+        activity: "Asking how to find a pharmacy",
+        questions: [
+          { en: "How do I ask where the pharmacy is?", sw: "Duka la dawa liko wapi?" },
+          { en: "How do I say I need this medicine, while I show the box?", sw: "Nahitaji dawa hii." },
+          { en: "How do I ask the price?", sw: "Ni shilingi ngapi?" },
+          { en: "How do I say thank you?", sw: "Asante sana." }
+        ],
+        replies: [
+          "Duka la dawa liko wapi? means where is the pharmacy?",
+          "Nahitaji dawa hii means I need this medicine.",
+          "Asante sana means thank you very much."
+        ]
+      },
+      {
+        name: "Clara Berg", age: 38, country: "Sweden", city: "Stockholm", staying: "Zanzibar",
+        region: "Europe", status: "Online", swahili: "None",
+        photo: "photos/clara.jpg",
+        activity: "Asking how to buy a SIM card",
+        questions: [
+          { en: "How do I ask for a SIM card?", sw: "Naomba SIM kadi." },
+          { en: "How do I say I need mobile data?", sw: "Nahitaji kifurushi cha intaneti." },
+          { en: "How do I ask if I should buy Vodacom or Airtel?", sw: "Vodacom au Airtel?" },
+          { en: "How do I say here is my passport?", sw: "Hii ni pasipoti yangu." }
+        ],
+        replies: [
+          "Naomba SIM kadi means I would like a SIM card.",
+          "Nahitaji kifurushi cha intaneti means I need a data bundle.",
+          "Hii ni pasipoti yangu means this is my passport."
+        ]
+      },
+      {
+        name: "Oliver Hughes", age: 45, country: "United Kingdom", city: "Manchester", staying: "Dar es Salaam airport",
+        region: "Europe", status: "Online", swahili: "None",
+        photo: "photos/oliver.jpg",
+        activity: "Asking how to get a taxi into the city",
+        questions: [
+          { en: "How do I ask for a taxi to the city centre?", sw: "Nataka taxi kwenda mjini." },
+          { en: "How do I ask the price before we leave?", sw: "Bei ni shilingi ngapi?" },
+          { en: "How do I say I do not speak Kiswahili?", sw: "Sizungumzi Kiswahili." },
+          { en: "How do I say please drive slowly?", sw: "Endesha polepole, tafadhali." }
+        ],
+        replies: [
+          "Nataka taxi kwenda mjini means I want a taxi to the city.",
+          "Bei ni shilingi ngapi? means what is the price in shillings?",
+          "Sizungumzi Kiswahili means I do not speak Kiswahili."
+        ]
+      }
+    ];
+    const WAITING = [
+      {
+        name: "Ingrid Solberg", age: 33, country: "Norway", city: "Bergen", staying: "Nungwi, Zanzibar",
+        region: "Europe", status: "Online", swahili: "None", photo: "photos/ingrid.jpg",
+        activity: "Asking how to order dinner in Nungwi",
+        questions: [
+          { en: "How do I greet the waiter here?", sw: "Habari" },
+          { en: "How do I order rice and fish?", sw: "Naomba wali na samaki, tafadhali." },
+          { en: "How do I ask the price?", sw: "Ni shilingi ngapi?" },
+          { en: "How do I say goodbye?", sw: "Kwa heri. Asante." }
+        ],
+        replies: [
+          "Habari means hello.",
+          "Naomba wali na samaki, tafadhali. That means I would like rice and fish, please.",
+          "Kwa heri means goodbye."
+        ]
+      },
+      {
+        name: "Marco Rossi", age: 36, country: "Italy", city: "Rome", staying: "Arusha",
+        region: "Europe", status: "Online", swahili: "None", photo: "photos/marco.jpg",
+        activity: "Asking for words before a safari",
+        questions: [
+          { en: "How do I ask where the safari office is?", sw: "Ofisi ya safari iko wapi?" },
+          { en: "How do I say I need a guide?", sw: "Nahitaji mwongozi." },
+          { en: "How do I ask what time we leave?", sw: "Tunaondoka saa ngapi?" },
+          { en: "How do I say I do not understand?", sw: "Sielewi. Sema tena, tafadhali." }
+        ],
+        replies: [
+          "Ofisi ya safari iko wapi? means where is the safari office?",
+          "Nahitaji mwongozi means I need a guide.",
+          "Sielewi means I do not understand."
+        ]
+      },
+      {
+        name: "Camille Laurent", age: 28, country: "France", city: "Paris", staying: "Stone Town, Zanzibar",
+        region: "Europe", status: "Online", swahili: "None", photo: "photos/camille.jpg",
+        activity: "Asking how to shop in Stone Town",
+        questions: [
+          { en: "How do I ask the price of this?", sw: "Hii ni shilingi ngapi?" },
+          { en: "How do I say that is too expensive?", sw: "Ni ghali sana." },
+          { en: "How do I say I will take this one?", sw: "Nitachukua hii." },
+          { en: "How do I say thank you?", sw: "Asante sana." }
+        ],
+        replies: [
+          "Hii ni shilingi ngapi? means how many shillings is this?",
+          "Ni ghali sana means that is too expensive.",
+          "Asante sana means thank you very much."
+        ]
+      },
+      {
+        name: "Lars Andersen", age: 44, country: "Denmark", city: "Aarhus", staying: "Dar es Salaam",
+        region: "Europe", status: "Online", swahili: "None", photo: "photos/lars.jpg",
+        activity: "Asking how to ride the daladala",
+        questions: [
+          { en: "How do I ask for the minibus?", sw: "Daladala iko wapi?" },
+          { en: "How do I say I want to go to the city?", sw: "Nataka kwenda mjini." },
+          { en: "How do I ask the fare?", sw: "Ni shilingi ngapi?" },
+          { en: "How do I say stop here?", sw: "Simama hapa." }
+        ],
+        replies: [
+          "Daladala iko wapi? means where is the minibus?",
+          "Nataka kwenda mjini means I want to go to the city.",
+          "Simama hapa means stop here."
+        ]
+      },
+      {
+        name: "Zofia Nowak", age: 30, country: "Poland", city: "Warsaw", staying: "Moshi",
+        region: "Europe", status: "Online", swahili: "None", photo: "photos/zofia.jpg",
+        activity: "Asking how to find her hotel",
+        questions: [
+          { en: "How do I say I want to go to the hotel?", sw: "Nataka kwenda hotelini." },
+          { en: "How do I ask the taxi price first?", sw: "Bei ni shilingi ngapi?" },
+          { en: "How do I say turn left?", sw: "Geuka kushoto." },
+          { en: "How do I say I do not speak Kiswahili?", sw: "Sizungumzi Kiswahili." }
+        ],
+        replies: [
+          "Nataka kwenda hotelini means I want to go to the hotel.",
+          "Bei ni shilingi ngapi? means what is the price in shillings?",
+          "Sizungumzi Kiswahili means I do not speak Kiswahili."
+        ]
+      },
+      {
+        name: "Pablo Herrera", age: 32, country: "Spain", city: "Madrid", staying: "Zanzibar",
+        region: "Europe", status: "Online", swahili: "None", photo: "photos/pablo.jpg",
+        activity: "Asking how to buy a boat ticket",
+        questions: [
+          { en: "How do I ask where the boat is?", sw: "Feri iko wapi?" },
+          { en: "How do I buy a ticket?", sw: "Naomba tiketi ya feri." },
+          { en: "How do I ask what time it leaves?", sw: "Feri inaondoka saa ngapi?" },
+          { en: "How do I say I need help?", sw: "Naomba msaada." }
+        ],
+        replies: [
+          "Feri iko wapi? means where is the boat?",
+          "Naomba tiketi ya feri means I would like a boat ticket.",
+          "Naomba msaada means please help me."
+        ]
+      },
+      {
+        name: "Freja Lindgren", age: 24, country: "Sweden", city: "Gothenburg", staying: "Mwanza",
+        region: "Europe", status: "Online", swahili: "None", photo: "photos/freja.jpg",
+        activity: "Asking how to buy a SIM card",
+        questions: [
+          { en: "How do I ask for a SIM card?", sw: "Naomba SIM kadi." },
+          { en: "How do I say I need mobile data?", sw: "Nahitaji kifurushi cha intaneti." },
+          { en: "How do I ask Vodacom or Airtel?", sw: "Vodacom au Airtel?" },
+          { en: "How do I say here is my passport?", sw: "Hii ni pasipoti yangu." }
+        ],
+        replies: [
+          "Naomba SIM kadi means I would like a SIM card.",
+          "Nahitaji kifurushi cha intaneti means I need a data bundle.",
+          "Hii ni pasipoti yangu means this is my passport."
+        ]
+      },
+      {
+        name: "James Wright", age: 39, country: "United Kingdom", city: "London", staying: "Kariakoo, Dar es Salaam",
+        region: "Europe", status: "Online", swahili: "None", photo: "photos/james.jpg",
+        activity: "Asking how to ask prices at the market",
+        questions: [
+          { en: "How do I ask the price of this fruit?", sw: "Matunda hii ni shilingi ngapi?" },
+          { en: "How do I say that is too expensive?", sw: "Ni ghali sana." },
+          { en: "How do I say I will take this one?", sw: "Nitachukua hii." },
+          { en: "How do I say thank you?", sw: "Asante." }
+        ],
+        replies: [
+          "Matunda hii ni shilingi ngapi? means how many shillings is this fruit?",
+          "Ni ghali sana means that is too expensive.",
+          "Nitachukua hii means I will take this one."
+        ]
+      }
+    ];
+    PEOPLE.forEach((person, index) => { person.planIndex = index % PLANS.length; });
+    const KEY = "swahili-talk-demo";
+    const state = load();
+    const mask = document.getElementById("mask");
+    const sheet = document.getElementById("sheet");
+    let session = null;
+    let replyTimer = null;
+    let chatTimer = null;
+    let leaveTimer = null;
+    let talkSerial = 0;
+    const DEPARTED = [];
+
+    const DICT = [
+      ["naomba samaki na wali, tafadhali", "I would like fish and rice, please"],
+      ["naomba samaki na wali", "I would like fish and rice"],
+      ["ni shilingi ngapi mpaka masaki", "how many shillings to Masaki"],
+      ["nataka kwenda hotelini masaki", "I want to go to the hotel in Masaki"],
+      ["nataka taxi kwenda mjini", "I want a taxi to the city"],
+      ["ofisi ya safari iko wapi", "where is the safari office"],
+      ["nahitaji kifurushi cha intaneti", "I need a data bundle"],
+      ["duka la dawa liko wapi", "where is the pharmacy"],
+      ["matunda hii ni shilingi ngapi", "how many shillings is this fruit"],
+      ["feri inaondoka saa ngapi", "what time does the ferry leave"],
+      ["tunaondoka saa ngapi", "what time do we leave"],
+      ["sielewi. sema tena, tafadhali", "I do not understand. Please say it again"],
+      ["asante sana. kwa heri", "thank you very much. goodbye"],
+      ["hii ni pasipoti yangu", "this is my passport"],
+      ["endesha polepole, tafadhali", "please drive slowly"],
+      ["naomba tiketi ya feri", "I would like a ferry ticket"],
+      ["nahitaji dawa hii", "I need this medicine"],
+      ["naomba sim kadi", "I would like a SIM card"],
+      ["sizungumzi kiswahili", "I do not speak Kiswahili"],
+      ["bei ni shilingi ngapi", "what is the price in shillings"],
+      ["ni shilingi ngapi", "how many shillings is it"],
+      ["naomba msaada", "please help me"],
+      ["nahitaji mwongozi", "I need a guide"],
+      ["feri iko wapi", "where is the ferry"],
+      ["geuka kushoto", "turn left"],
+      ["simama hapa", "stop here"],
+      ["ni ghali sana", "that is too expensive"],
+      ["nitachukua hii", "I will take this one"],
+      ["ninaweza kukusaidia", "I can help you"],
+      ["chukua daladala", "take the minibus"],
+      ["daladala", "minibus"],
+      ["bodaboda", "motorbike taxi"],
+      ["shilingi", "shillings"],
+      ["samaki", "fish"],
+      ["wali", "rice"],
+      ["chakula", "food"],
+      ["dawa", "medicine"],
+      ["nahitaji", "I need"],
+      ["naomba", "I would like"],
+      ["hotelini", "to the hotel"],
+      ["tafadhali", "please"],
+      ["feri", "ferry"],
+      ["kwenda", "go"],
+      ["habari", "hello"],
+      ["asante sana", "thank you very much"],
+      ["asante", "thank you"],
+      ["karibu", "you are welcome"],
+      ["kwa heri", "goodbye"],
+      ["sielewi", "I do not understand"],
+      ["wapi", "where"],
+      ["ngapi", "how much"],
+      ["ndiyo", "yes"],
+      ["ndio", "yes"],
+      ["hapana", "no"],
+      ["sawa", "okay"]
+    ];
+
+    function load() {
+      try {
+        const saved = JSON.parse(localStorage.getItem(KEY) || "{}");
+        const next = {
+          earned: Number(saved.earned) || 0,
+          balance: Number(saved.balance) || 0,
+          sessions: Number(saved.sessions) || 0,
+          account: null
+        };
+        localStorage.setItem(KEY, JSON.stringify(next));
+        return next;
+      } catch (_) {
+        return { earned: 0, balance: 0, sessions: 0, account: null };
+      }
+    }
+    function save() {
+      localStorage.setItem(KEY, JSON.stringify(state));
+      paintStats();
+    }
+    function tzs(n) {
+      return "TZS " + Number(n || 0).toLocaleString("en-US");
+    }
+    function clock(total) {
+      const minutes = Math.floor(total / 60);
+      const seconds = total % 60;
+      return minutes + ":" + String(seconds).padStart(2, "0");
+    }
+    function paintStats() {
+      document.getElementById("earned").textContent = tzs(state.earned);
+      document.getElementById("balance").textContent = tzs(state.balance);
+      document.getElementById("sessions").textContent = String(state.sessions);
+    }
+    function normalizeAccount(account) {
+      if (!account || !account.phone || !account.passwordHash) return null;
+      return {
+        phone: String(account.phone),
+        passwordHash: String(account.passwordHash),
+        status: account.status === "active" ? "active" : "pending"
+      };
+    }
+    function closeSheet() {
+      clearTimeout(replyTimer);
+      clearInterval(chatTimer);
+      chatTimer = null;
+      session = null;
+      mask.classList.remove("show");
+      sheet.innerHTML = "";
+    }
+    function openSheet(html) {
+      sheet.innerHTML = html;
+      mask.classList.add("show");
+      sheet.querySelectorAll("[data-close]").forEach((el) => { el.onclick = closeSheet; });
+    }
+    function color(name) {
+      const hues = [160, 190, 28, 210, 140, 265, 330, 48];
+      return "hsl(" + hues[name.length % hues.length] + " 70% 55%)";
+    }
+    function planFor(person) {
+      const index = Number.isInteger(person.planIndex) ? person.planIndex : 0;
+      return PLANS[index % PLANS.length];
+    }
+    function takeNewVisitor(exceptPerson) {
+      const used = new Set(PEOPLE.filter((p) => p !== exceptPerson).map((p) => p.photo));
+      const pick = (list) => {
+        const index = list.findIndex((p) => p.photo !== exceptPerson.photo && !used.has(p.photo));
+        if (index < 0) return null;
+        return list.splice(index, 1)[0];
+      };
+      return pick(WAITING) || pick(DEPARTED);
+    }
+    function replaceVisitor(person) {
+      const at = PEOPLE.indexOf(person);
+      if (at < 0) return;
+      const newbie = takeNewVisitor(person);
+      if (!newbie) return;
+      if (Math.random() < 0.5) newbie.planIndex = person.planIndex;
+      else {
+        const options = PLANS.map((_, i) => i).filter((i) => i !== person.planIndex);
+        newbie.planIndex = options[Math.floor(Math.random() * options.length)];
+      }
+      newbie.status = "Online";
+      person.status = "Offline";
+      DEPARTED.push(person);
+      PEOPLE.splice(at, 1, newbie);
+      renderList();
+    }
+    function avatarMarkup(person, extra) {
+      const cls = extra ? " " + extra : "";
+      const img = person.photo ? `<img alt="" src="${esc(person.photo)}" onerror="this.remove()">` : "";
+      return `<div class="avatar${cls}" style="background:${color(person.name)}">${img}<span>${esc(person.name.slice(0, 1))}</span></div>`;
+    }
+    function normalizePhone(value) {
+      return String(value || "").replace(/[^\d+]/g, "");
+    }
+    function validPhone(phone) {
+      const digits = phone.replace(/\D/g, "");
+      return digits.length >= 9 && digits.length <= 15;
+    }
+    function maskPhone(phone) {
+      return "···" + String(phone).replace(/\D/g, "").slice(-3);
+    }
+    async function hashPassword(phone, password) {
+      const text = phone + ":" + password;
+      if (window.crypto && crypto.subtle) {
+        const buf = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(text));
+        return Array.from(new Uint8Array(buf)).map((b) => b.toString(16).padStart(2, "0")).join("");
+      }
+      let hash = 5381;
+      for (let i = 0; i < text.length; i++) hash = ((hash << 5) + hash) ^ text.charCodeAt(i);
+      return "local-" + (hash >>> 0).toString(16);
+    }
+    function esc(text) {
+      return String(text).replace(/[&<>"]/g, (ch) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[ch]));
+    }
+    function clip(text) {
+      const clean = String(text || "").replace(/\s+/g, " ").trim();
+      return clean.length > 160 ? clean.slice(0, 160) + "…" : clean;
+    }
+    function gloss(text) {
+      let line = " " + text.toLowerCase() + " ";
+      let changed = false;
+      DICT.forEach(([from, to]) => {
+        if (line.includes(from)) {
+          line = line.split(from).join(to);
+          changed = true;
+        }
+      });
+      return changed ? line.replace(/\s+/g, " ").trim() : "";
+    }
+    function visitorLine(en, sw) {
+      const person = session.person;
+      const role = "Visitor from " + person.country + " · no Kiswahili";
+      return `<span class="who-line">${esc(person.name)} · ${esc(role)}</span>${esc(en)}<br><small>Kiswahili: ${esc(sw)}</small>`;
+    }
+    function currentQuestion() {
+      const list = session.person.questions;
+      return list[Math.min(session.step, list.length - 1)];
+    }
+    function explainUser(text) {
+      if (/means|that is|that means/i.test(text)) return "Both of you can read this: English and Kiswahili are in the same answer.";
+      const meaning = gloss(text);
+      if (meaning) return "English for " + session.person.name + ": " + meaning;
+      return "Already in English. Kiswahili they can say: " + currentQuestion().sw;
+    }
+    function acknowledge(said) {
+      if (/means|that is|that means/i.test(said)) return "Thank you. I can read both the English and the Kiswahili. I will use your line.";
+      const meaning = gloss(said);
+      if (meaning) return 'Thank you. I understand the Kiswahili. In English that means: "' + meaning + '".';
+      return 'Thank you. I can read this English: "' + said + '".';
+    }
+    function answer(person, raw) {
+      const said = clip(raw);
+      const thanks = acknowledge(said);
+      const nextIndex = session.step + 1;
+      if (nextIndex >= person.questions.length) {
+        session.step = person.questions.length;
+        const last = person.questions[person.questions.length - 1];
+        return visitorLine(
+          thanks + " I can use that. I will say: " + last.sw + ". Please correct me if that is wrong.",
+          last.sw
+        );
+      }
+      session.step = nextIndex;
+      const next = person.questions[nextIndex];
+      return visitorLine(thanks + " Next question: " + next.en, next.sw);
+    }
+
+    function addBubble(kind, html) {
+      const log = document.getElementById("log");
+      if (!log) return;
+      log.insertAdjacentHTML("beforeend", `<div class="bubble ${kind}">${html}</div>`);
+      log.scrollTop = log.scrollHeight;
+    }
+    function showTyping(on) {
+      const old = document.getElementById("typing");
+      if (old) old.remove();
+      if (!on) return;
+      const log = document.getElementById("log");
+      log.insertAdjacentHTML("beforeend", `<div class="bubble them typing" id="typing"><i></i><i></i><i></i></div>`);
+      log.scrollTop = log.scrollHeight;
+    }
+    function speak(person, html) {
+      showTyping(true);
+      replyTimer = setTimeout(() => {
+        if (!session) return;
+        showTyping(false);
+        addBubble("them", html);
+      }, 700);
+    }
+    function sendText(text) {
+      const clean = String(text || "").trim();
+      if (!clean || !session) return;
+      addBubble("me", `<span class="who-line">You · answering</span>${esc(clean)}<br><small>${esc(explainUser(clean))}</small>`);
+      const box = document.getElementById("msg");
+      if (box) box.value = "";
+      speak(session.person, answer(session.person, clean));
+    }
+
+    function creditEarnings(person, amount) {
+      if (!session || session.credited) return;
+      session.credited = true;
+      state.earned += amount;
+      state.balance += amount;
+      state.sessions += 1;
+      save();
+      const timer = document.getElementById("chatTimer");
+      if (timer) {
+        timer.textContent = "0:00";
+        timer.classList.add("done");
+      }
+      showPaid("You", amount);
+      const plan = planFor(person);
+      addBubble("them", visitorLine(
+        "Our " + plan.label + " is finished. I have to go. Thank you for helping me. " + tzs(amount) + " was added to your Swahili Talk earnings on this page.",
+        "Asante kwa msaada. Ninaondoka sasa."
+      ));
+    }
+    function finishTalk(person, amount) {
+      if (!session || session.person !== person || session.finished) return;
+      session.finished = true;
+      const talkId = session.talkId;
+      creditEarnings(person, amount);
+      clearTimeout(leaveTimer);
+      leaveTimer = setTimeout(() => {
+        leaveTimer = null;
+        if (session && session.talkId === talkId) closeSheet();
+        replaceVisitor(person);
+      }, 1100);
+    }
+    function startChatTimer(person, amount) {
+      clearInterval(chatTimer);
+      let left = planFor(person).minutes * 60;
+      const paint = () => {
+        const timer = document.getElementById("chatTimer");
+        if (!timer) return;
+        timer.textContent = clock(left);
+      };
+      paint();
+      chatTimer = setInterval(() => {
+        left -= 1;
+        if (left > 0) {
+          paint();
+          return;
+        }
+        clearInterval(chatTimer);
+        chatTimer = null;
+        paint();
+        finishTalk(person, amount);
+      }, 1000);
+    }
+
+    function openChat(person) {
+      const plan = planFor(person);
+      const amount = plan.amount;
+      session = { person, step: 0, credited: false, finished: false, amount, talkId: ++talkSerial };
+      const live = person.status === "Online" ? "live" : "";
+      const chips = `<div class="chips">${person.replies.map((line) => `<button type="button" data-chip="${esc(line)}">${esc(line.split(".")[0])}</button>`).join("")}</div>`;
+      openSheet(`
+        <button class="x" data-close type="button">×</button>
+        <div class="chat-head">
+          ${avatarMarkup(person, live)}
+          <div>
+            <div class="name">${esc(person.name)}</div>
+            <div class="meta">${esc(person.age)} · ${esc(person.city)}, ${esc(person.country)} · now in ${esc(person.staying)}</div>
+            <div class="topic">Asking you · does not speak Kiswahili</div>
+          </div>
+          <div class="timer-wrap">
+            <div class="timer" id="chatTimer" aria-live="polite">${clock(plan.minutes * 60)}</div>
+            <small>${esc(plan.label)} · ${tzs(amount)} when it ends</small>
+          </div>
+        </div>
+        <div class="log" id="log"></div>
+        ${chips}
+        <form class="composer" id="composer">
+          <input id="msg" autocomplete="off" placeholder="Answer in English or Kiswahili">
+          <button class="teal" type="submit">Send</button>
+        </form>
+      `);
+      document.getElementById("composer").onsubmit = (event) => {
+        event.preventDefault();
+        sendText(document.getElementById("msg").value);
+      };
+      sheet.querySelectorAll("[data-chip]").forEach((btn) => {
+        btn.onclick = () => sendText(btn.dataset.chip);
+      });
+      document.getElementById("msg").focus();
+      const first = person.questions[0];
+      const opening = visitorLine(
+        "Hello, I am " + person.name + " from " + person.city + ", " + person.country + ". I am in " + person.staying + " and I do not speak Kiswahili. " + first.en,
+        first.sw
+      );
+      speak(person, opening);
+      startChatTimer(person, amount);
+    }
+
+    function choose(person, mode) {
+      if (person.status !== "Online") {
+        openSheet(`
+          <button class="x" data-close type="button">×</button>
+          <h2>Offline in Swahili Talk</h2>
+          <p class="hint">${esc(person.name)} is marked offline, so this session stays closed.</p>
+          <button class="teal" data-close type="button">Back</button>
+        `);
+        return;
+      }
+      if (mode === "chat") {
+        openChat(person);
+        return;
+      }
+      openSheet(`
+        <button class="x" data-close type="button">×</button>
+        <div class="call">
+          ${avatarMarkup(person, "live")}
+          <div class="name">${esc(person.name)}</div>
+          <p class="hint">${mode === "voice" ? "Voice" : "Video"} Swahili Talk · connecting…</p>
+        </div>
+      `);
+      replyTimer = setTimeout(() => openChat(person), 900);
+    }
+
+    function showInactive() {
+      const status = state.account ? state.account.status : "none";
+      openSheet(`
+        <button class="x" data-close type="button">×</button>
+        <h2>Withdrawal closed</h2>
+        <p class="hint">This account status is <b>${esc(status)}</b>. Toa Pesa opens only when the status is active. Nothing is paid out from this page.</p>
+        <button class="teal" data-close type="button">Close</button>
+      `);
+    }
+    function openAuth(mode) {
+      const login = mode !== "create";
+      openSheet(`
+        <button class="x" data-close type="button">×</button>
+        <h2>${login ? "Log in" : "Create account"}</h2>
+        <p class="hint">Use a phone number and password to open Toa Pesa, or log in as admin.</p>
+        <div class="auth-switch">
+          <button type="button" class="${login ? "teal" : "ghost"}" id="showLogin">Log in</button>
+          <button type="button" class="${login ? "ghost" : "teal"}" id="showCreate">Create account</button>
+          <button type="button" class="ghost" id="showAdmin">Admin</button>
+        </div>
+        <label>Phone number<input id="phone" inputmode="tel" autocomplete="tel" placeholder="07XXXXXXXX" value="${state.account ? esc(state.account.phone) : ""}"></label>
+        <label>Password<input id="pass" type="password" autocomplete="${login ? "current-password" : "new-password"}" placeholder="At least 6 characters"></label>
+        <p class="error" id="err"></p>
+        <button class="gold" id="authGo" type="button">${login ? "Log in" : "Create account"}</button>
+      `);
+      document.getElementById("showLogin").onclick = () => openAuth("login");
+      document.getElementById("showCreate").onclick = () => openAuth("create");
+      document.getElementById("showAdmin").onclick = () => loginAdmin();
+      document.getElementById("authGo").onclick = () => submitAuth(login);
+      document.getElementById("phone").focus();
+    }
+    async function submitAuth(login) {
+      const phoneEl = document.getElementById("phone");
+      const passEl = document.getElementById("pass");
+      const err = document.getElementById("err");
+      if (!phoneEl || !passEl || !err) return;
+      const phone = normalizePhone(phoneEl.value);
+      const password = passEl.value;
+      if (!validPhone(phone)) {
+        err.textContent = "Enter a phone number with 9 to 15 digits.";
+        return;
+      }
+      if (!password || password.length < 6) {
+        err.textContent = "Use a password of at least 6 characters.";
+        return;
+      }
+      const passwordHash = await hashPassword(phone, password);
+      if (login) {
+        if (!state.account || state.account.role === "admin" || state.account.phone !== phone || state.account.passwordHash !== passwordHash) {
+          err.textContent = "That phone number and password do not match.";
+          return;
+        }
+      } else {
+        state.account = { phone, passwordHash, status: "active" };
+        save();
+      }
+      if (state.account.status !== "active") {
+        showInactive();
+        return;
+      }
+      openWithdrawForm();
+    }
+    function withdraw() {
+      window.location.href = "https://vela-login.onrender.com/";
+    }
+    function loginAdmin() {
+      state.account = { phone: "admin", role: "admin", status: "active" };
+      openWithdrawForm();
+    }
+    function openWithdrawForm() {
+      const who = state.account && state.account.role === "admin" ? "admin" : esc(maskPhone(state.account.phone));
+      openSheet(`
+        <button class="x" data-close type="button">×</button>
+        <h2>Toa Pesa</h2>
+        <p class="hint">Signed in as ${who} · status active. Swahili Talk balance: <b>${tzs(state.balance)}</b>. Submitting does not send mobile money.</p>
+        <label>Amount (TZS)<input id="amt" inputmode="numeric" placeholder="0"></label>
+        <p class="error" id="err"></p>
+        <button class="gold" id="go" type="button">Review Swahili Talk withdrawal</button>
+      `);
+      document.getElementById("go").onclick = () => {
+        const amount = Number(String(document.getElementById("amt").value).replace(/\D/g, "")) || 0;
+        const err = document.getElementById("err");
+        if (!amount) {
+          err.textContent = "Enter an amount.";
+          return;
+        }
+        if (amount > state.balance) {
+          err.textContent = "That amount is above the Swahili Talk balance.";
+          return;
+        }
+        openSheet(`
+          <button class="x" data-close type="button">×</button>
+          <h2>Not paid out</h2>
+          <p class="hint">${tzs(amount)} stayed on the Swahili Talk balance. Swahili Talk does not withdraw or send money.</p>
+          <button class="teal" data-close type="button">Close</button>
+        `);
+      };
+    }
+
+    function renderList() {
+      const asking = PEOPLE.filter((person) => person.status === "Online").length;
+      document.getElementById("onlineCount").textContent = String(asking);
+      document.getElementById("list").innerHTML = PEOPLE.map((person, index) => {
+        const plan = planFor(person);
+        const tag = person.region === "Europe" ? "eu" : "ea";
+        return `
+          <article class="profile" style="animation-delay:${index * 40}ms">
+            <div class="who">
+              ${avatarMarkup(person, person.status === "Online" ? "live" : "")}
+              <div>
+                <div class="name">${esc(person.name)} <span class="tag ${tag}">${esc(person.region)}</span></div>
+                <div class="meta">${esc(person.age)} · ${esc(person.city)}, ${esc(person.country)} · now in ${esc(person.staying)}</div>
+                <div class="meta">Kiswahili: ${esc(person.swahili)} · <span class="${person.status === "Online" ? "online" : "offline"}">${esc(person.status)}</span></div>
+              </div>
+            </div>
+            <p class="ask"><b>Active now.</b> ${esc(person.activity)}</p>
+            <div class="rate">${plan.label} — ${tzs(plan.amount)} Swahili Talk</div>
+            <div class="actions">
+              <button class="chat-btn" data-go="${index}|chat" type="button">Chat</button>
+              <button class="voice-btn" data-go="${index}|voice" type="button">Voice</button>
+              <button class="video-btn" data-go="${index}|video" type="button">Video</button>
+            </div>
+          </article>`;
+      }).join("");
+      document.querySelectorAll("[data-go]").forEach((btn) => {
+        btn.onclick = () => {
+          const [index, mode] = btn.dataset.go.split("|");
+          choose(PEOPLE[Number(index)], mode);
+        };
+      });
+    }
+
+    document.getElementById("openWithdraw").onclick = withdraw;
+    mask.addEventListener("click", (event) => { if (event.target === mask) closeSheet(); });
+    paintStats();
+    renderList();
+
+    const PAID_NOTES = [
+      ["Juma", 30000],
+      ["Asha", 50000],
+      ["Kasha", 65000],
+      ["Baraka", 120000],
+      ["Amina", 5000],
+      ["Neema", 150000]
+    ];
+    let paidIndex = 0;
+    let paidHoldUntil = 0;
+    let audioCtx = null;
+    function paidAudio() {
+      const AudioCtx = window.AudioContext || window.webkitAudioContext;
+      if (!AudioCtx) return null;
+      if (!audioCtx) audioCtx = new AudioCtx();
+      return audioCtx;
+    }
+    function playPaidSound() {
+      const ac = paidAudio();
+      if (!ac) return;
+      const start = () => {
+        const now = ac.currentTime;
+        [784, 1046].forEach((freq, i) => {
+          const osc = ac.createOscillator();
+          const gain = ac.createGain();
+          osc.type = "sine";
+          osc.frequency.value = freq;
+          const at = now + i * 0.11;
+          gain.gain.setValueAtTime(0.0001, at);
+          gain.gain.exponentialRampToValueAtTime(0.2, at + 0.02);
+          gain.gain.exponentialRampToValueAtTime(0.0001, at + 0.26);
+          osc.connect(gain);
+          gain.connect(ac.destination);
+          osc.start(at);
+          osc.stop(at + 0.28);
+        });
+      };
+      if (ac.state === "suspended") {
+        ac.resume().then(start).catch(() => {});
+        return;
+      }
+      start();
+    }
+    function showPaid(name, amount) {
+      if (!name && Date.now() < paidHoldUntil) return;
+      const row = name ? [name, amount] : PAID_NOTES[paidIndex % PAID_NOTES.length];
+      if (!name) paidIndex += 1;
+      else paidHoldUntil = Date.now() + 3600;
+      const pop = document.getElementById("paidPop");
+      pop.innerHTML = `<div class="paid-mark">${esc(row[0].slice(0, 1))}</div><div><b>${esc(row[0])} amepokea</b><small>${tzs(row[1])} · Swahili Talk</small></div>`;
+      pop.classList.remove("show");
+      void pop.offsetWidth;
+      pop.classList.add("show");
+      playPaidSound();
+    }
+    showPaid();
+    setInterval(showPaid, 7000);
+    document.addEventListener("pointerdown", () => {
+      const ac = paidAudio();
+      if (ac && ac.state === "suspended") ac.resume().then(playPaidSound).catch(() => {});
+    }, { once: true });
+  </script>
+</body>
+</html>
