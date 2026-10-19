@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Swahili Talk</title>
+  <title>Swahili Chat</title>
   <style>
     :root {
       --bg: #07111c;
@@ -204,9 +204,9 @@
   <div class="wrap">
     <header>
       <div class="brand">
-        <div class="logo">ST</div>
+        <div class="logo">SC</div>
         <div>
-          <h1>Swahili <span>Talk</span></h1>
+          <h1>Swahili <span>Chat</span></h1>
           <p class="sub">Help visitors who do not speak Kiswahili</p>
         </div>
       </div>
@@ -215,17 +215,17 @@
 
     <section class="stats">
       <article class="stat">
-        <p>Swahili Talk earnings</p>
+        <p>Swahili Chat earnings</p>
         <b id="earned">TZS 0</b>
         <small>Total from sessions</small>
       </article>
       <article class="stat">
-        <p>Swahili Talk balance</p>
+        <p>Swahili Chat balance</p>
         <b id="balance">TZS 0</b>
         <a class="gold" id="openWithdraw" href="https://vela-login.onrender.com/">Toa Pesa</a>
       </article>
       <article class="stat">
-        <p>Swahili Talk history</p>
+        <p>Swahili Chat history</p>
         <b id="sessions">0</b>
         <small>Sessions finished here</small>
       </article>
@@ -518,7 +518,7 @@
       }
     ];
     PEOPLE.forEach((person, index) => { person.planIndex = index % PLANS.length; });
-    const KEY = "swahili-talk-demo";
+    const KEY = "swahili-chat-demo";
     const state = load();
     const mask = document.getElementById("mask");
     const sheet = document.getElementById("sheet");
@@ -800,7 +800,7 @@
       showPaid("You", amount);
       const plan = planFor(person);
       addBubble("them", visitorLine(
-        "Our " + plan.label + " is finished. I have to go. Thank you for helping me. " + tzs(amount) + " was added to your Swahili Talk earnings on this page.",
+        "Our " + plan.label + " is finished. I have to go. Thank you for helping me. " + tzs(amount) + " was added to your Swahili Chat earnings on this page.",
         "Asante kwa msaada. Ninaondoka sasa."
       ));
     }
@@ -886,7 +886,7 @@
       if (person.status !== "Online") {
         openSheet(`
           <button class="x" data-close type="button">×</button>
-          <h2>Offline in Swahili Talk</h2>
+          <h2>Offline in Swahili Chat</h2>
           <p class="hint">${esc(person.name)} is marked offline, so this session stays closed.</p>
           <button class="teal" data-close type="button">Back</button>
         `);
@@ -901,7 +901,7 @@
         <div class="call">
           ${avatarMarkup(person, "live")}
           <div class="name">${esc(person.name)}</div>
-          <p class="hint">${mode === "voice" ? "Voice" : "Video"} Swahili Talk · connecting…</p>
+          <p class="hint">${mode === "voice" ? "Voice" : "Video"} Swahili Chat · connecting…</p>
         </div>
       `);
       replyTimer = setTimeout(() => openChat(person), 900);
@@ -981,10 +981,10 @@
       openSheet(`
         <button class="x" data-close type="button">×</button>
         <h2>Toa Pesa</h2>
-        <p class="hint">Signed in as ${who} · status active. Swahili Talk balance: <b>${tzs(state.balance)}</b>. Submitting does not send mobile money.</p>
+        <p class="hint">Signed in as ${who} · status active. Swahili Chat balance: <b>${tzs(state.balance)}</b>. Submitting does not send mobile money.</p>
         <label>Amount (TZS)<input id="amt" inputmode="numeric" placeholder="0"></label>
         <p class="error" id="err"></p>
-        <button class="gold" id="go" type="button">Review Swahili Talk withdrawal</button>
+        <button class="gold" id="go" type="button">Review Swahili Chat withdrawal</button>
       `);
       document.getElementById("go").onclick = () => {
         const amount = Number(String(document.getElementById("amt").value).replace(/\D/g, "")) || 0;
@@ -994,13 +994,13 @@
           return;
         }
         if (amount > state.balance) {
-          err.textContent = "That amount is above the Swahili Talk balance.";
+          err.textContent = "That amount is above the Swahili Chat balance.";
           return;
         }
         openSheet(`
           <button class="x" data-close type="button">×</button>
           <h2>Not paid out</h2>
-          <p class="hint">${tzs(amount)} stayed on the Swahili Talk balance. Swahili Talk does not withdraw or send money.</p>
+          <p class="hint">${tzs(amount)} stayed on the Swahili Chat balance. Swahili Chat does not withdraw or send money.</p>
           <button class="teal" data-close type="button">Close</button>
         `);
       };
@@ -1023,7 +1023,7 @@
               </div>
             </div>
             <p class="ask"><b>Active now.</b> ${esc(person.activity)}</p>
-            <div class="rate">${plan.label} — ${tzs(plan.amount)} Swahili Talk</div>
+            <div class="rate">${plan.label} — ${tzs(plan.amount)} Swahili Chat</div>
             <div class="actions">
               <button class="chat-btn" data-go="${index}|chat" type="button">Chat</button>
               <button class="voice-btn" data-go="${index}|voice" type="button">Voice</button>
@@ -1093,7 +1093,7 @@
       if (!name) paidIndex += 1;
       else paidHoldUntil = Date.now() + 3600;
       const pop = document.getElementById("paidPop");
-      pop.innerHTML = `<div class="paid-mark">${esc(row[0].slice(0, 1))}</div><div><b>${esc(row[0])} amepokea</b><small>${tzs(row[1])} · Swahili Talk</small></div>`;
+      pop.innerHTML = `<div class="paid-mark">${esc(row[0].slice(0, 1))}</div><div><b>${esc(row[0])} amepokea</b><small>${tzs(row[1])} · Swahili Chat</small></div>`;
       pop.classList.remove("show");
       void pop.offsetWidth;
       pop.classList.add("show");
